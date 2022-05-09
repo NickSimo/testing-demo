@@ -27,7 +27,7 @@ VALUES
 (
     'Marco',
     'Bianchi',
-    'BNCMRCS12D19L78T',
+    'BNCMRCS12D19L787',
     'via popolo 5'
 ),
 (
