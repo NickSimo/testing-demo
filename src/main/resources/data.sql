@@ -33,6 +33,6 @@ VALUES
 (
     'Andrea',
     'Lo Russo',
-    'BNCMRCS12D19L78T',
+    'BNCMRCS12D19L787',
     'via Legnago 5'
 );
