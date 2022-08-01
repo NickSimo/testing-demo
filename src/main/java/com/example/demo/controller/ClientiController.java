@@ -27,5 +27,4 @@ public class ClientiController {
         return estraiClientiService.estrazioneClientePerCodiceFiscale(cf);
     }
 
-
 }

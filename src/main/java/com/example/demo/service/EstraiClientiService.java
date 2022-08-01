@@ -4,6 +4,8 @@ import com.example.demo.entity.Cliente;
 import com.example.demo.exception.InputErratoException;
 import com.example.demo.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +14,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EstraiClientiService {
 
+    @Autowired
     private final ClienteRepository clienteRepository;
-
 
     public List<Cliente> estraiTuttiIClienti() {
         return clienteRepository.estraiTuttiIClienti();
@@ -22,10 +24,9 @@ public class EstraiClientiService {
     public Cliente estrazioneClientePerCodiceFiscale(String codiceFiscale) {
         if (codiceFiscale == null || codiceFiscale == "") {
             throw new InputErratoException();
-        }else {
+        } else {
             return clienteRepository.estrazioneClientePerCodiceFiscale(codiceFiscale);
         }
     }
-
 
 }
