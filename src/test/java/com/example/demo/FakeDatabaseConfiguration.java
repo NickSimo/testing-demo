@@ -8,8 +8,9 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 @Configuration
 public class FakeDatabaseConfiguration {
 
-  @Bean
-  public JdbcTemplate jdbcTemplate() {
-    return new JdbcTemplate(new EmbeddedDatabaseBuilder().addScript("test-schema.sql").addScript("test-data.sql").build());
-  }
+	@Bean
+	public JdbcTemplate jdbcTemplate() {
+		return new JdbcTemplate(
+				new EmbeddedDatabaseBuilder().addScript("test-schema.sql").addScript("test-data.sql").build());
+	}
 }
