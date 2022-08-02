@@ -7,7 +7,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 @Configuration
 public class FakeDatabaseConfiguration {
-
 	@Bean
 	public JdbcTemplate jdbcTemplate() {
 		return new JdbcTemplate(

@@ -27,4 +27,8 @@ public class ClientiController {
         return estraiClientiService.estrazioneClientePerCodiceFiscale(cf);
     }
 
+    @GetMapping(value = "/ultimi-cinque-clienti")
+    public List<Cliente> ultimiCinqueClienti() {
+        return estraiClientiService.estraiUltimiCinqueClientiInseriti();
+    }
 }
