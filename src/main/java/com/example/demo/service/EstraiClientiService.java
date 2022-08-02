@@ -29,4 +29,8 @@ public class EstraiClientiService {
         }
     }
 
+    public List<Cliente> estraiUltimiCinqueClientiInseriti() {
+        return clienteRepository.estraiUltimiCinqueClientiInseriti();
+    }
+
 }

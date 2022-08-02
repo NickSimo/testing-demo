@@ -5,11 +5,16 @@ import com.example.demo.entity.rowmapper.ClienteRowMapper;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.example.demo.entity.Cliente;
+import com.example.demo.entity.rowmapper.ClienteRowMapper;
+
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -36,12 +41,11 @@ public class ClienteRepository {
         }
     }
 
-    // public List<Cliente> estraiUltimi5ClientiInseriti() {
-    // try {
-    // return jdbcTemplate.query("SELECT TOP 5 * FROM clienti ORDER BY id DESC", new
-    // ClienteRowMapper());
-    // } catch (EmptyResultDataAccessException e) {
-    // return null;
-    // }
-    // }
+    public List<Cliente> estraiUltimiCinqueClientiInseriti() {
+        try {
+            return jdbcTemplate.query("SELECT * FROM clienti ORDER BY id DESC LIMIT 5", new ClienteRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }
