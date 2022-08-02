@@ -11,11 +11,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.Cliente;
-import com.example.demo.entity.rowmapper.ClienteRowMapper;
-
-import lombok.RequiredArgsConstructor;
-
 @Repository
 @RequiredArgsConstructor
 public class ClienteRepository {

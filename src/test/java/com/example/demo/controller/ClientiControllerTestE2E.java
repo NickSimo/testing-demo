@@ -8,8 +8,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import org.springframework.context.annotation.Import;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.example.demo.FakeDatabaseConfiguration;
 import com.example.demo.entity.Cliente;
