@@ -77,7 +77,7 @@ public class EstraiClientiServiceTest {
 
     private Cliente setupModello(Long id, String[] strings) throws ParseException {
         Cliente modello = new Cliente();
-        Date dataEsempio = (Date) new SimpleDateFormat("yyyy-mm-dd").parse("2001-01-01");
+        Date dataEsempio = (Date) new SimpleDateFormat("yyyy-MM-dd").parse("2001-01-01");
 
         modello.setId(id);
         modello.setNome(strings[0]);

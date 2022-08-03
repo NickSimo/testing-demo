@@ -13,6 +13,10 @@ import com.example.demo.FakeDatabaseConfiguration;
 import com.example.demo.entity.Cliente;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -71,13 +75,14 @@ public class ClientiControllerTestE2E {
                 .andExpect(jsonPath("[3].nome").value("Andrea"));
     }
 
-    private Cliente setupCheckMario() {
+    private Cliente setupCheckMario() throws ParseException {
         Cliente modello = new Cliente();
 
         modello.setNome("Mario");
         modello.setCognome("Rossi");
         modello.setCodice_fiscale("RSSMRO12D19L78T");
         modello.setIndirizzo_residenza("via alberto dominutti 6");
+        modello.setData_di_nascita(new SimpleDateFormat("yyyy-MM-dd").parse("2001-01-01"));
 
         return modello;
     }
