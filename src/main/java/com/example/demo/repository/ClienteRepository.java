@@ -4,7 +4,8 @@ import com.example.demo.entity.Cliente;
 import com.example.demo.entity.rowmapper.ClienteRowMapper;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class ClienteRepository {
 
-    @Autowired
     private final JdbcTemplate jdbcTemplate;
 
     public List<Cliente> estraiTuttiIClienti() {
@@ -42,5 +42,19 @@ public class ClienteRepository {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public List<Cliente> estraiClientiMaggiorenniInseriti(String dataControllo) {
+        try {
+            return jdbcTemplate.query(
+                    "SELECT * FROM clienti WHERE DATEADD(year, 18, data_di_nascita) < '" + dataControllo + "'",
+                    new ClienteRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public List<Cliente> estraiClientiMaggiorenniInseriti() {
+        return estraiClientiMaggiorenniInseriti(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
     }
 }

@@ -43,4 +43,10 @@ public class ClientiControllerIntegrationTest {
         assertArrayEquals(service.estraiUltimiCinqueClientiInseriti().toArray(),
                 controller.ultimiCinqueClienti().toArray());
     }
+
+    @Test
+    public void estraiClientiMaggiorenniInseritiIntegrationTest_TrueSe_GliArrayDaServiceEControllerCombaciano() {
+        assertArrayEquals(service.estraiClientiMaggiorenniInseriti().toArray(),
+                controller.clientiMaggiorenni().toArray());
+    }
 }

@@ -31,4 +31,9 @@ public class ClientiController {
     public List<Cliente> ultimiCinqueClienti() {
         return estraiClientiService.estraiUltimiCinqueClientiInseriti();
     }
+
+    @GetMapping(value = "/clienti-maggiorenni")
+    public List<Cliente> clientiMaggiorenni() {
+        return estraiClientiService.estraiClientiMaggiorenniInseriti();
+    }
 }

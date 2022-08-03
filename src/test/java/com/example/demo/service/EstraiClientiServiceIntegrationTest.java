@@ -44,4 +44,9 @@ public class EstraiClientiServiceIntegrationTest {
                 service.estraiUltimiCinqueClientiInseriti().toArray());
     }
 
+    @Test
+    public void estraiClientiMaggiorenniInseritiIntegrationTest_TrueSe_GliArrayDaRepositoryEServiceCombaciano() {
+        assertArrayEquals(repository.estraiClientiMaggiorenniInseriti("2022-01-01").toArray(),
+                service.estraiClientiMaggiorenniInseriti().toArray());
+    }
 }

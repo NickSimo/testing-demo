@@ -38,6 +38,7 @@ public class ClientiControllerTestE2E {
     @Test
     public void clientiParametricoE2EServiceTest_TrueSe_StatusOkAndElencoNomiCorretto() throws Exception {
         Cliente modello = setupCheckMario();
+
         mvc.perform(MockMvcRequestBuilders
                 .get("/clienti/estrazione-per-cf?cf=" + modello.getCodice_fiscale()))
                 .andExpect(status().isOk())
@@ -57,6 +58,17 @@ public class ClientiControllerTestE2E {
                 .andExpect(jsonPath("[2].nome").value("Gaetano"))
                 .andExpect(jsonPath("[3].nome").value("Ciro"))
                 .andExpect(jsonPath("[4].nome").value("Mario"));
+    }
+
+    @Test
+    public void clientiMaggiorenniE2EServiceTest_TrueSe_StatusOkAndElencoNomiCorretto() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .get("/clienti/clienti-maggiorenni"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("[0].nome").value("Mario"))
+                .andExpect(jsonPath("[1].nome").value("Ciro"))
+                .andExpect(jsonPath("[2].nome").value("Marco"))
+                .andExpect(jsonPath("[3].nome").value("Andrea"));
     }
 
     private Cliente setupCheckMario() {

@@ -26,7 +26,7 @@ VALUES
     'Russo',
     'RSSGTN12D19L78T',
     'via centrale 1',
-    '2001-01-01'
+    '2015-01-01'
 ),
 (
     'Marco',

@@ -5,7 +5,6 @@ import com.example.demo.exception.InputErratoException;
 import com.example.demo.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EstraiClientiService {
 
-    @Autowired
     private final ClienteRepository clienteRepository;
 
     public List<Cliente> estraiTuttiIClienti() {
@@ -31,6 +29,14 @@ public class EstraiClientiService {
 
     public List<Cliente> estraiUltimiCinqueClientiInseriti() {
         return clienteRepository.estraiUltimiCinqueClientiInseriti();
+    }
+
+    public List<Cliente> estraiClientiMaggiorenniInseriti() {
+        return clienteRepository.estraiClientiMaggiorenniInseriti();
+    }
+
+    public List<Cliente> estraiClientiMaggiorenniInseriti(String dataControllo) {
+        return clienteRepository.estraiClientiMaggiorenniInseriti(dataControllo);
     }
 
 }
