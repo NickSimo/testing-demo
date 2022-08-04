@@ -8,8 +8,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 
 import com.example.demo.FakeDatabaseConfiguration;
+import com.example.demo.ModelloNuovoCliente;
 import com.example.demo.entity.Cliente;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,6 +77,27 @@ public class ClientiControllerTestE2E {
                 .andExpect(jsonPath("[3].nome").value("Andrea"));
     }
 
+    @Test
+    public void inserimantoNuovoClienteTest_TrueSe_StatusOkAndNuovoUtenteInseritoCorrettamente() throws Exception {
+        Cliente modello = new ModelloNuovoCliente().getNuovoCliente();
+
+        String test = getClienteToJsonFormat(modello);
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/clienti/inserimento-cliente")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(test))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders
+                .get("/clienti/estrazione-per-cf?cf=" + modello.getCodice_fiscale()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("nome").value(modello.getNome()))
+                .andExpect(jsonPath("cognome").value(modello.getCognome()))
+                .andExpect(jsonPath("codice_fiscale").value(modello.getCodice_fiscale()))
+                .andExpect(jsonPath("indirizzo_residenza").value(modello.getIndirizzo_residenza()));
+    }
+
     private Cliente setupCheckMario() throws ParseException {
         Cliente modello = new Cliente();
 
@@ -85,5 +108,16 @@ public class ClientiControllerTestE2E {
         modello.setData_di_nascita(new SimpleDateFormat("yyyy-MM-dd").parse("2001-01-01"));
 
         return modello;
+    }
+
+    private String getClienteToJsonFormat(Cliente modello) {
+        String test = "{\"id\":\"" + modello.getId()
+                + "\",\"nome\":\"" + modello.getNome()
+                + "\",\"cognome\":\"" + modello.getCognome()
+                + "\",\"codice_fiscale\":\"" + modello.getCodice_fiscale()
+                + "\",\"indirizzo_residenza\":\"" + modello.getIndirizzo_residenza()
+                + "\",\"data_di_nascita\":\"" + new SimpleDateFormat("yyyy-MM-dd").format(modello.getData_di_nascita())
+                + "\"}";
+        return test;
     }
 }

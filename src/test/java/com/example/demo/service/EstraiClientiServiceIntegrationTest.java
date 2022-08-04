@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class EstraiClientiServiceIntegrationTest {
     }
 
     @Test
-    public void estrazioneClientePerCodiceFiscaleIntegrationTest_TrueSe_IlClienteDaRepositoryEServiceCombacia() {
+    public void estrazioneClientePerCodiceFiscaleIntegrationTest_TrueSe_IlClienteDaRepositoryEServiceCombaciano() {
         Cliente modelloRepo = repository.estrazioneClientePerCodiceFiscale("CROSPS12D19L78T");
         Cliente modelloService = service.estrazioneClientePerCodiceFiscale("CROSPS12D19L78T");
 

@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

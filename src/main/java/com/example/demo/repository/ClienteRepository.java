@@ -54,6 +54,20 @@ public class ClienteRepository {
         }
     }
 
+    public void inserisciNuovoCliente(Cliente clienteModello) {
+        try {
+            jdbcTemplate.update(
+                    "INSERT INTO clienti ( nome, cognome, codice_fiscale, indirizzo_residenza, data_di_nascita) VALUES ("
+                            + "'" + clienteModello.getNome() + "',"
+                            + "'" + clienteModello.getCognome() + "',"
+                            + "'" + clienteModello.getCodice_fiscale() + "',"
+                            + "'" + clienteModello.getIndirizzo_residenza() + "',"
+                            + "'" + new SimpleDateFormat("yyyy-MM-dd").format(clienteModello.getData_di_nascita())
+                            + "')");
+        } catch (EmptyResultDataAccessException e) {
+        }
+    }
+
     public List<Cliente> estraiClientiMaggiorenniInseriti() {
         return estraiClientiMaggiorenniInseriti(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
     }

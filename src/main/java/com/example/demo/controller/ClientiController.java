@@ -2,8 +2,14 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Cliente;
 import com.example.demo.service.EstraiClientiService;
+import com.example.demo.service.InserimentoClientiService;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +22,7 @@ import java.util.List;
 public class ClientiController {
 
     private final EstraiClientiService estraiClientiService;
+    private final InserimentoClientiService inserimentoClientiService;
 
     @GetMapping(value = "/elenco")
     public List<Cliente> clienti() {
@@ -35,5 +42,11 @@ public class ClientiController {
     @GetMapping(value = "/clienti-maggiorenni")
     public List<Cliente> clientiMaggiorenni() {
         return estraiClientiService.estraiClientiMaggiorenniInseriti();
+    }
+
+    @PostMapping(value = "/inserimento-cliente", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public void inserimantoNuovoCliente(@RequestBody Cliente clienteModello) {
+        inserimentoClientiService.inserisciNuovoCliente(clienteModello);
     }
 }
