@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.example.demo.FakeDatabaseConfiguration;
 import com.example.demo.ModelloNuovoCliente;
@@ -28,6 +29,8 @@ public class ClientiControllerTestE2E {
 
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private JdbcTemplate template;
 
     @Test
     public void clientiE2EServiceTest_TrueSe_StatusOkAndElencoNomiCorretto() throws Exception {
@@ -96,6 +99,8 @@ public class ClientiControllerTestE2E {
                 .andExpect(jsonPath("cognome").value(modello.getCognome()))
                 .andExpect(jsonPath("codice_fiscale").value(modello.getCodice_fiscale()))
                 .andExpect(jsonPath("indirizzo_residenza").value(modello.getIndirizzo_residenza()));
+
+        template.update("DELETE FROM Clienti WHERE codice_fiscale = '" + modello.getCodice_fiscale() + "'");
     }
 
     private Cliente setupCheckMario() throws ParseException {
