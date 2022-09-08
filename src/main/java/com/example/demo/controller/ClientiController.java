@@ -19,12 +19,19 @@ public class ClientiController {
 
     @GetMapping(value = "/elenco")
     public List<Cliente> clienti() {
+        System.out.println("Chiamata ricevuta");
         return estraiClientiService.estraiTuttiIClienti();
     }
 
     @GetMapping(value = "/estrazione-per-cf")
     public Cliente clienti(@RequestParam String cf) {
         return estraiClientiService.estrazioneClientePerCodiceFiscale(cf);
+    }
+
+    @GetMapping(value = "/test")
+    public String test() {
+        System.out.println("Chiamata /test ricevuta");
+        return "successo";
     }
 
 
