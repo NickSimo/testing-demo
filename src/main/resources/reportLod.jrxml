@@ -48,9 +48,9 @@
 	<subDataset name="Table Dataset 2" uuid="2b8870f4-6ef4-4364-a726-8bc5dfdd2eaa"/>
 	<parameter name="TITOLO_GRAFICO" class="java.lang.String"/>
 	<parameter name="PATH_IMG" class="java.lang.String"/>
-	<queryString language="SQL">
-		<![CDATA[]]>
-	</queryString>
+<!--	<queryString language="SQL">-->
+<!--		<![CDATA[]]>-->
+<!--	</queryString>-->
 	<field name="titolo" class="java.lang.String"/>
 	<field name="valore" class="java.lang.Integer"/>
 	<title>
@@ -61,6 +61,7 @@
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+
 			</textField>
 			<staticText>
 				<reportElement x="278" y="10" width="99" height="20" uuid="6bc1ec5e-5295-4f25-b9ac-3a56fb1e578b"/>

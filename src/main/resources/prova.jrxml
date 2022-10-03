@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="books" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="template.engine" value="tabular_template"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#066990">
+		<box> <topPen lineWidth="0.5" lineColor="#000000"/> <bottomPen lineWidth="0.5" lineColor="#000000"/> </box>
+	</style>
+	<style name="Table_CH" mode="Opaque" forecolor="#FFFFFF" backcolor="#06618F" hTextAlign="Center" fontSize="12">
+		<box> <topPen lineWidth="0.5" lineColor="#000000"/> <bottomPen lineWidth="0.5" lineColor="#000000"/> </box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF" hTextAlign="Center">
+		<box> <topPen lineWidth="0.5" lineColor="#000000"/> <bottomPen lineWidth="0.5" lineColor="#000000"/> </box>
+	</style>
+	<subDataset name="Data">
+		<field name="literature_type_name" class="java.lang.String"/>
+		<field name="books_instances_amount" class="java.lang.Long"/>
+		<field name="reference_books_instances_amount" class="java.lang.Long"/>
+	</subDataset>
+	<parameter name="TITOLO_GRAFICO" class="java.lang.String"/>
+	<parameter name="PATH_IMG" class="java.lang.String"/>
+	<field name="titolo" class="java.lang.String"/>
+	<field name="valore" class="java.lang.Integer"/>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699"/>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement x="377" y="10" width="146" height="20" uuid="a4c0e95b-c075-4b1d-8f09-472e6b934c04"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+
+				</textField>
+				<staticText>
+					<reportElement x="278" y="10" width="99" height="20" uuid="6bc1ec5e-5295-4f25-b9ac-3a56fb1e578b"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Data creazione:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="75" width="555" height="20" uuid="dc509ec2-2e87-47d8-8a7a-bdbeab5edfd4"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="29" y="96" width="494" height="20" forecolor="#FFFFFF" backcolor="#3366FF" uuid="f980e7e5-2c59-449a-9ee1-72f3ff0cbcf8"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{TITOLO_GRAFICO}]]></textFieldExpression>
+				</textField>
+				<image>
+					<reportElement x="29" y="0" width="198" height="75" uuid="214b3931-7150-452a-8597-128c8e73d2aa"/>
+					<imageExpression><![CDATA[$P{PATH_IMG}]]></imageExpression>
+				</image>
+			</frame>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="29" y="0" width="371" height="20" uuid="3a028b18-0a95-4f2e-9c37-99432a8ea63a"/>
+				<box>
+					<pen lineColor="#666666"/>
+					<topPen lineColor="#666666"/>
+					<leftPen lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineColor="#666666"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{titolo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="123" height="20" uuid="34f3f590-cab8-46b2-9237-5b386c68dcdc"/>
+				<box>
+					<pen lineColor="#666666"/>
+					<topPen lineColor="#666666"/>
+					<leftPen lineColor="#666666"/>
+					<bottomPen lineWidth="0.25" lineColor="#666666"/>
+					<rightPen lineColor="#666666"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{valore}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="M/d/yy">
+				<reportElement x="0" y="4" width="280" height="13"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
