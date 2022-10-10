@@ -2,8 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.controller.MonitoraggioController;
 import com.example.demo.entity.*;
-import com.example.demo.exception.InputErratoException;
-import com.example.demo.repository.ClienteRepository;
 import com.example.demo.repository.MonitoraggioRepository;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
@@ -14,12 +12,18 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -99,9 +103,67 @@ public class MonitoraggioService {
 
     }
 
-    public static void main(String[] args) {
-        System.out.println(TipoGrafico.valueOf("RESOURCE_DOWNLOAD").getDescrizione());
+    public List<Monitoraggio> datasetPerTema() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<GroupListResponse> response = restTemplate.exchange("https://web21.linksmt.it/ckan/api/3/action/group_list", HttpMethod.GET, new HttpEntity<>(createHeaders("user1", "59k9uso")), GroupListResponse.class);
+        List<Monitoraggio> result = new ArrayList<>();
+        for (String group : response.getBody().getResult()) {
+            ResponseEntity<GroupShowResponse> a = restTemplate.exchange("https://web21.linksmt.it/ckan/api/3/action/group_show?id="+group, HttpMethod.GET, new HttpEntity<>(createHeaders("user1", "59k9uso")), GroupShowResponse.class);
+            Monitoraggio nDatasetPerTemaResponse = new Monitoraggio();
+            nDatasetPerTemaResponse.setDescrizione(group);
+            nDatasetPerTemaResponse.setNumero(a.getBody().getResult().getPackage_count());
+            result.add(nDatasetPerTemaResponse);
+        }
+        return result;
+    }
+    public List<Monitoraggio> datasetPerOrganizzazione() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<OrganizationListResponse> response = restTemplate.exchange("https://web21.linksmt.it/ckan/api/3/action/organization_list", HttpMethod.GET, new HttpEntity<>(createHeaders("user1", "59k9uso")), OrganizationListResponse.class);
+        List<Monitoraggio> result = new ArrayList<>();
+        for (String organization : response.getBody().getResult()) {
+            ResponseEntity<OrganizationShowResponse> a = restTemplate.exchange("https://web21.linksmt.it/ckan/api/3/action/organization_show?id="+organization, HttpMethod.GET, new HttpEntity<>(createHeaders("user1", "59k9uso")), OrganizationShowResponse.class);
+            Monitoraggio nDatasetPerTemaResponse = new Monitoraggio();
+            nDatasetPerTemaResponse.setDescrizione(organization);
+            nDatasetPerTemaResponse.setNumero(a.getBody().getResult().getPackage_count());
+            result.add(nDatasetPerTemaResponse);
+        }
+        return result;
     }
 
+    public List<Monitoraggio> licenzeUtilizzate() {
+        List<Licenza> licenze = monitoraggioRepository.estraiLicenze();
+        RestTemplate restTemplate = new RestTemplate();
+        List<Monitoraggio> result = new ArrayList<>();
+        ResponseEntity<LicenseListResponse> listaLicenze = restTemplate.exchange("https://web21.linksmt.it/ckan/api/3/action/organization_show?id=", HttpMethod.GET, new HttpEntity<>(createHeaders("user1", "59k9uso")), LicenseListResponse.class);
+        for (Licenza licenza : licenze) {
+            Monitoraggio nDatasetPerTemaResponse = new Monitoraggio();
+            nDatasetPerTemaResponse.setDescrizione(findTitleByLicenseId(licenza.getId(), listaLicenze.getBody()));
+            nDatasetPerTemaResponse.setNumero(licenza.getNumero());
+            result.add(nDatasetPerTemaResponse);
+        }
+        return result;
+    }
 
+    private String findTitleByLicenseId(String id, LicenseListResponse listaLicenze) {
+        for (LicenseListResponse.ResultJsonElement resultJsonElement : listaLicenze.getResult()) {
+            if(id.equalsIgnoreCase(resultJsonElement.getId())){
+                return resultJsonElement.getTitle();
+            }
+        }
+        return "";
+    }
+
+    public List<Monitoraggio> formatiPiuUtilizzati() throws ParseException {
+        return monitoraggioRepository.estraiFormatiUtilizzati();
+    }
+
+    HttpHeaders createHeaders(String username, String password){
+        return new HttpHeaders() {{
+            String auth = username + ":" + password;
+            byte[] encodedAuth = Base64.encodeBase64(
+                    auth.getBytes(Charset.forName("US-ASCII")) );
+            String authHeader = "Basic " + new String( encodedAuth );
+            set( "Authorization", authHeader );
+        }};
+    }
 }

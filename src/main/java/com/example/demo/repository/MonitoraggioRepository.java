@@ -1,8 +1,11 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Cliente;
+import com.example.demo.entity.Licenza;
 import com.example.demo.entity.Monitoraggio;
 import com.example.demo.entity.rowmapper.ClienteRowMapper;
+import com.example.demo.entity.rowmapper.FormatiUtilizzatiRowMapper;
+import com.example.demo.entity.rowmapper.LicenzeRowMapper;
 import com.example.demo.entity.rowmapper.MonitoraggioRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -43,6 +46,33 @@ public class MonitoraggioRepository {
                     "    order by sum(hits) desc";
             System.out.println(sql);
             return jdbcTemplate.query(sql, new MonitoraggioRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+    public List<Licenza> estraiLicenze() {
+        try {
+            return jdbcTemplate.query("select p.license_id as id,count(p.id) as count\n" +
+                    "    from package p\n" +
+                    "    where p.state = 'active'and\n" +
+                    "    p.license_id is not null and\n" +
+                    "    p.license_id != ''\n" +
+                    "    group by p.license_id\n" +
+                    "    order by count(p.id) desc", new LicenzeRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public List<Monitoraggio> estraiFormatiUtilizzati() {
+        try {
+            return jdbcTemplate.query("select format as formato, count(id) as count\n" +
+                    "from resource r\n" +
+                    "where r.state = 'active' and\n" +
+                    "format is not null\n" +
+                    "and format != ''\n" +
+                    "group by format\n" +
+                    "order by count(id) desc;", new FormatiUtilizzatiRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
