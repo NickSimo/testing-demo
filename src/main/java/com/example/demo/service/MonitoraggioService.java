@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -35,6 +37,8 @@ import java.util.stream.Collectors;
 public class MonitoraggioService {
 
     private final MonitoraggioRepository monitoraggioRepository;
+
+    private Properties configProperties = loadProperties();
 
     public List<Monitoraggio> estrai(String tipo, String dataDa, String dataA) throws ParseException {
         if (dataDa != null && dataA != null) {
@@ -105,10 +109,10 @@ public class MonitoraggioService {
 
     public List<Monitoraggio> datasetPerTema() {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<GroupListResponse> response = restTemplate.exchange("https://web21.linksmt.it/ckan/api/3/action/group_list", HttpMethod.GET, new HttpEntity<>(createHeaders("user1", "59k9uso")), GroupListResponse.class);
+        ResponseEntity<GroupListResponse> response = restTemplate.exchange(configProperties.getProperty("server.path") + "api/3/action/group_list", HttpMethod.GET, new HttpEntity<>(createHeaders()), GroupListResponse.class);
         List<Monitoraggio> result = new ArrayList<>();
         for (String group : response.getBody().getResult()) {
-            ResponseEntity<GroupShowResponse> a = restTemplate.exchange("https://web21.linksmt.it/ckan/api/3/action/group_show?id="+group, HttpMethod.GET, new HttpEntity<>(createHeaders("user1", "59k9uso")), GroupShowResponse.class);
+            ResponseEntity<GroupShowResponse> a = restTemplate.exchange(configProperties.getProperty("server.path") + "api/3/action/group_show?id=" + group, HttpMethod.GET, new HttpEntity<>(createHeaders()), GroupShowResponse.class);
             Monitoraggio nDatasetPerTemaResponse = new Monitoraggio();
             nDatasetPerTemaResponse.setDescrizione(group);
             nDatasetPerTemaResponse.setNumero(a.getBody().getResult().getPackage_count());
@@ -116,12 +120,13 @@ public class MonitoraggioService {
         }
         return result;
     }
+
     public List<Monitoraggio> datasetPerOrganizzazione() {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<OrganizationListResponse> response = restTemplate.exchange("https://web21.linksmt.it/ckan/api/3/action/organization_list", HttpMethod.GET, new HttpEntity<>(createHeaders("user1", "59k9uso")), OrganizationListResponse.class);
+        ResponseEntity<OrganizationListResponse> response = restTemplate.exchange(configProperties.getProperty("server.path") + "api/3/action/organization_list", HttpMethod.GET, new HttpEntity<>(createHeaders()), OrganizationListResponse.class);
         List<Monitoraggio> result = new ArrayList<>();
         for (String organization : response.getBody().getResult()) {
-            ResponseEntity<OrganizationShowResponse> a = restTemplate.exchange("https://web21.linksmt.it/ckan/api/3/action/organization_show?id="+organization, HttpMethod.GET, new HttpEntity<>(createHeaders("user1", "59k9uso")), OrganizationShowResponse.class);
+            ResponseEntity<OrganizationShowResponse> a = restTemplate.exchange(configProperties.getProperty("server.path") + "api/3/action/organization_show?id=" + organization, HttpMethod.GET, new HttpEntity<>(createHeaders()), OrganizationShowResponse.class);
             Monitoraggio nDatasetPerTemaResponse = new Monitoraggio();
             nDatasetPerTemaResponse.setDescrizione(organization);
             nDatasetPerTemaResponse.setNumero(a.getBody().getResult().getPackage_count());
@@ -134,7 +139,7 @@ public class MonitoraggioService {
         List<Licenza> licenze = monitoraggioRepository.estraiLicenze();
         RestTemplate restTemplate = new RestTemplate();
         List<Monitoraggio> result = new ArrayList<>();
-        ResponseEntity<LicenseListResponse> listaLicenze = restTemplate.exchange("https://web21.linksmt.it/ckan/api/3/action/organization_show?id=", HttpMethod.GET, new HttpEntity<>(createHeaders("user1", "59k9uso")), LicenseListResponse.class);
+        ResponseEntity<LicenseListResponse> listaLicenze = restTemplate.exchange(configProperties.getProperty("server.path") + "api/3/action/organization_show?id=", HttpMethod.GET, new HttpEntity<>(createHeaders()), LicenseListResponse.class);
         for (Licenza licenza : licenze) {
             Monitoraggio nDatasetPerTemaResponse = new Monitoraggio();
             nDatasetPerTemaResponse.setDescrizione(findTitleByLicenseId(licenza.getId(), listaLicenze.getBody()));
@@ -146,7 +151,7 @@ public class MonitoraggioService {
 
     private String findTitleByLicenseId(String id, LicenseListResponse listaLicenze) {
         for (LicenseListResponse.ResultJsonElement resultJsonElement : listaLicenze.getResult()) {
-            if(id.equalsIgnoreCase(resultJsonElement.getId())){
+            if (id.equalsIgnoreCase(resultJsonElement.getId())) {
                 return resultJsonElement.getTitle();
             }
         }
@@ -157,13 +162,47 @@ public class MonitoraggioService {
         return monitoraggioRepository.estraiFormatiUtilizzati();
     }
 
-    HttpHeaders createHeaders(String username, String password){
+    public List<Monitoraggio> temiPiuCliccati() {
+        List<Tema> temi = monitoraggioRepository.estraiTemiCliccati();
+        RestTemplate restTemplate = new RestTemplate();
+        List<Monitoraggio> result = new ArrayList<>();
+        ResponseEntity<GroupListResponse> gruppi = restTemplate.exchange(configProperties.getProperty("server.path") + "api/3/action/group_list", HttpMethod.GET, new HttpEntity<>(createHeaders()), GroupListResponse.class);
+        for (String gruppo : gruppi.getBody().getResult()) {
+            Tema tema = abcd(configProperties.getProperty("theme.group.baseurl") + gruppo, temi);
+            Monitoraggio nDatasetPerTemaResponse = new Monitoraggio();
+            nDatasetPerTemaResponse.setDescrizione(tema.getId());
+            nDatasetPerTemaResponse.setNumero(tema.getNumero());
+            result.add(nDatasetPerTemaResponse);
+        }
+        return result;
+    }
+
+    private Tema abcd(String gruppo, List<Tema> temi) {
+        for (Tema tema : temi) {
+            if (gruppo.equalsIgnoreCase(tema.getUrl())) {
+                return tema;
+            }
+        }
+        return new Tema();
+    }
+
+    public static Properties loadProperties(){
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream("src/main/resources/config.properties"));
+        }catch(Exception e){
+            return properties;
+        }
+        return properties;
+    }
+
+    HttpHeaders createHeaders() {
         return new HttpHeaders() {{
-            String auth = username + ":" + password;
+            String auth = configProperties.getProperty("server.username") + ":" + configProperties.getProperty("server.password");
             byte[] encodedAuth = Base64.encodeBase64(
-                    auth.getBytes(Charset.forName("US-ASCII")) );
-            String authHeader = "Basic " + new String( encodedAuth );
-            set( "Authorization", authHeader );
+                    auth.getBytes(Charset.forName("US-ASCII")));
+            String authHeader = "Basic " + new String(encodedAuth);
+            set("Authorization", authHeader);
         }};
     }
 }

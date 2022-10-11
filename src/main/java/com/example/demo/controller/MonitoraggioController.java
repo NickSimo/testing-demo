@@ -33,7 +33,7 @@ public class MonitoraggioController {
             case PAGE_VIEW:
                 return monitoraggioService.estrai(tipo, dataDa, dataA);
             case TEMI_VIEW:
-                return null;
+                return monitoraggioService.temiPiuCliccati();
             case DATASET_TEMA:
                 return monitoraggioService.datasetPerTema();
             case FORMATI_USED:

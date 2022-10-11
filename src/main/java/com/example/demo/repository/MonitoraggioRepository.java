@@ -3,10 +3,8 @@ package com.example.demo.repository;
 import com.example.demo.entity.Cliente;
 import com.example.demo.entity.Licenza;
 import com.example.demo.entity.Monitoraggio;
-import com.example.demo.entity.rowmapper.ClienteRowMapper;
-import com.example.demo.entity.rowmapper.FormatiUtilizzatiRowMapper;
-import com.example.demo.entity.rowmapper.LicenzeRowMapper;
-import com.example.demo.entity.rowmapper.MonitoraggioRowMapper;
+import com.example.demo.entity.Tema;
+import com.example.demo.entity.rowmapper.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -73,6 +71,20 @@ public class MonitoraggioRepository {
                     "and format != ''\n" +
                     "group by format\n" +
                     "order by count(id) desc;", new FormatiUtilizzatiRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+    public List<Tema> estraiTemiCliccati() {
+        try {
+            return jdbcTemplate.query("SELECT max(page_hit.page_title ::text) AS dataset_id,\n" +
+                    "    page_hit.page_url_short as url,\n" +
+                    "    sum(page_hit.hits) AS total\n" +
+                    "   FROM page_hit\n" +
+                    "  WHERE page_hit.event_type::text = 'PAGE_VIEW'::text and\n" +
+                    "  page_hit.page_url_short::text like '%group/%'::text\n" +
+                    "  GROUP BY page_hit.page_url_short\n" +
+                    "  ORDER BY (sum(page_hit.hits)) DESC;", new TemiCliccatiRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
